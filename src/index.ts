@@ -21,12 +21,6 @@ const argv = yargs
         description: 'Function/tagged template name to search for.',
         type: 'string'
     })
-    .option('config', {
-        alias: 'c',
-        description: 'Babel config file path',
-        type: 'string',
-        default: 'babel.config.json'
-    })
     .option('out', {
         alias: 'o',
         description: 'Output file',

@@ -10,19 +10,20 @@ export default function Gettextractor (mapper: ResultMapper) {
         return {
             name: 'gettexter',
             visitor: {
-                TaggedTemplateExpression: function (path: BabelCoreNamespace.NodePath<any>, state) {
-                    if (path.node.tag.name !== '__') return;
+                CallExpression: function (path: BabelCoreNamespace.NodePath<any>, state) {
+                    if (path.node.callee.name !== '__') return;
+                    if (path.node.arguments[0].type !== 'StringLiteral') return;
 
-                    const quasi = path.node.quasi.quasis[0];
+                    const argument = path.node.arguments[0];
                     const cwd = `${state.cwd}/`;
                     const file = state.file.opts.filename.replace(cwd, '');
 
                     mapper({
-                        id: quasi.value.raw,
-                        value: quasi.value.raw,
+                        id: argument.value,
+                        value: argument.value,
                         file,
-                        line: quasi.loc.start.line,
-                        column: quasi.loc.start.column
+                        line: argument.loc.start.line,
+                        column: argument.loc.start.column
                     });
                 }
             }

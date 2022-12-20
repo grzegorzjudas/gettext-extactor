@@ -1,6 +1,6 @@
 # gettextractor
 
-CLI for extracting translation strings from application source files to a .PO (gettext) file for later translation. It uses babel under the hood to traverse AST tree and find all strings that appear in a tagged template expression.
+CLI for extracting translation strings from application source files to a .PO (gettext) file for later translation. It uses babel under the hood to traverse AST tree and find all strings that appear in specific function calls.
 
 ## Usage
 Consider the following application source fragment:
@@ -10,12 +10,12 @@ Consider the following application source fragment:
 
     export function injectHeader () {
         const element = document.createElement('h1');
-        element.innerText = __`Hello world!`;
+        element.innerText = __('Hello world!');
 
         document.appendChild(element);
     }
 ```
-regardless of what `__` function (tagged template expression) does, in an application development lifecycle, at some poiny you'll want to extract all translatable strings from source code and generate a file that'll want to send for translation. This tool is able to extract those strings from your whole application code to a single .po file.
+regardless of what `__` function does, in an application development lifecycle, at some point you'll want to extract all translatable strings from source code and generate a file that'll want to send for translation. This tool is able to extract those strings from your whole application code to a single .po file.
 
 To do that on the above file, do:
 ```bash
@@ -25,7 +25,7 @@ This will print the .PO file contents to standard output. See `--out` flag usage
 
 **--name**
 
-Provide the name of a tagged template expression that will be looked for during extraction.
+Provide the name of a function that will be looked for during extraction.
 
 **--dir**
 
