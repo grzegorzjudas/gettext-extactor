@@ -15,6 +15,9 @@ export default function Gettextractor (mapper: ResultMapper) {
                     if (path.node.arguments[0].type !== 'StringLiteral') return;
 
                     const argument = path.node.arguments[0];
+                    const config = path.node.arguments[1]?.properties
+                    const indexOfPluralForm = config?.findIndex((arg: any) => arg.key.name === 'pluralForm')
+                    
                     const cwd = `${state.cwd}/`;
                     const file = state.file.opts.filename.replace(cwd, '');
 
@@ -23,7 +26,8 @@ export default function Gettextractor (mapper: ResultMapper) {
                         value: argument.value,
                         file,
                         line: argument.loc.start.line,
-                        column: argument.loc.start.column
+                        column: argument.loc.start.column,
+                        pluralForm: config?.[indexOfPluralForm]?.value.value
                     });
                 }
             }

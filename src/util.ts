@@ -40,6 +40,7 @@ export function generateGettext (translations: Translation[], headers: Record<st
             [translation.value]: {
                 msgid: {
                     msgid: translation.id,
+                    ...(typeof translation.pluralForm !== 'undefined' ? {msgid_plural: [translation.pluralForm]} : {}),
                     msgstr: [ translation.value ],
                     comments: {
                         reference: `${translation.file}:${translation.line}:${translation.column}`
