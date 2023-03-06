@@ -44,3 +44,33 @@ If you want to have the result saved to a file, provide its name as a value for 
 ```bash
 $ gettextractor --name __ --dir src --filter '.ts' --out en.po
 ```
+
+**--annotation** (optional)
+
+Sometimes, you may want to pass some information to future translators (reg. context, etc). In such case, you can do so by adding a comment direcly above the line with translation:
+```ts
+// TRANSLATORS: It's defining the greeting message.
+const text = __('Hello world!');
+```
+
+This flag allows you to change the default `TRANSLATORS` prefix used for comments that will be passed to the resulting .po file, i.e.:
+```ts
+// CONTEXT: Custom info for translators.
+/*
+ * CONTEXT: I can also accept
+ * multiline comment.
+ */
+const text = __('Hello world!');
+```
+```bash
+$ gettextrator --name __ --dir src --filter '.ts' --annotation 'CONTEXT'
+```
+```
+msgid ""
+msgstr "Content-Type: text/plain\n"
+
+# Custom info for translators.; I can also accept multiline comment.
+#: src/HelloWorld.tsx:14:20
+msgid "Hello world!"
+msgstr "Hello world!"
+```

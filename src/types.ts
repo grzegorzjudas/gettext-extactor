@@ -4,4 +4,5 @@ export type Translation = {
     file: string;
     line: number;
     column: number;
+    comments: string[];
 };

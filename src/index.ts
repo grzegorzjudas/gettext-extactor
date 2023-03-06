@@ -26,13 +26,19 @@ const argv = yargs
         description: 'Output file',
         type: 'string'
     })
+    .option('annotation', {
+        alias: 'a',
+        description: 'Annotation prefix',
+        type: 'string',
+        default: 'TRANSLATORS'
+    })
     .help()
     .alias('help', 'h')
     .demandOption([ 'dir', 'filter', 'name' ]).parseSync();
 
 (async () => {
     const files = await traverseDir(argv.dir, argv.filter.split(','));
-    const translations = await extractTranslationsFromFiles(files);
+    const translations = await extractTranslationsFromFiles(files, argv.annotation);
     const poFile = generatePoFromTranslations(translations);
 
     if (argv.out) {

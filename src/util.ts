@@ -42,7 +42,8 @@ export function generateGettext (translations: Translation[], headers: Record<st
                     msgid: translation.id,
                     msgstr: [ translation.value ],
                     comments: {
-                        reference: `${translation.file}:${translation.line}:${translation.column}`
+                        reference: `${translation.file}:${translation.line}:${translation.column}`,
+                        translator: translation.comments.join('; ')
                     } as GetTextComment
                 }
             }
@@ -50,20 +51,23 @@ export function generateGettext (translations: Translation[], headers: Record<st
     };
 }
 
-export function prepareBabelConfig (callback: (result: Translation) => void) {
+export function prepareBabelConfig (callback: (result: Translation) => void, annotationPrefix: string) {
     const config = loadPartialConfig();
-    const plugin = Gettextrator(callback);
+    const plugin = Gettextrator({
+        mapper: callback,
+        annotationPrefix
+    });
 
     config.options.plugins = [ plugin, ...(config.options.plugins || []) ];
 
     return config;
 }
 
-export async function extractTranslationsFromFiles (files: string[]) {
+export async function extractTranslationsFromFiles (files: string[], annotationPrefix: string) {
     const data: Translation[] = [];
     const config = prepareBabelConfig((result) => {
         data.push(result);
-    });
+    }, annotationPrefix);
 
     await Promise.all(files.map((f) => {
         return transformFileAsync(f, config.options);
