@@ -5,4 +5,7 @@ export type Translation = {
     line: number;
     column: number;
     comments: string[];
+    context: {
+        plural?: string;
+    }
 };

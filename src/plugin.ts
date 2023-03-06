@@ -9,7 +9,7 @@ export type GettextractorOptions = {
 }
 
 function getAnnotations (path: BabelCoreNamespace.NodePath<any>, prefix: string) {
-    const parentPath = path.findParent((path) => path.parent.leadingComments.length > 0);
+    const parentPath = path.findParent((path) => path.parent.leadingComments?.length > 0);
     const annotations = parentPath.parent.leadingComments.map((comment) => {
         if (comment.type === 'CommentBlock') {
             const lines = comment.value
@@ -30,6 +30,12 @@ function getAnnotations (path: BabelCoreNamespace.NodePath<any>, prefix: string)
     return annotations.filter((v) => !!v).map((c) => c.replace(/\s+/g, ' ').trim());
 }
 
+function getContextValue (context: any = {}, key: string) {
+    const index = context.findIndex((prop: any) => prop.key.name === key);
+
+    return context[index].value.value;
+}
+
 export default function Gettextractor (opts: GettextractorOptions) {
     return (): PluginObj => {
         return {
@@ -43,6 +49,7 @@ export default function Gettextractor (opts: GettextractorOptions) {
                     const cwd = `${state.cwd}/`;
                     const file = state.file.opts.filename.replace(cwd, '');
                     const comments = getAnnotations(path, opts.annotationPrefix);
+                    const context = path.node.arguments[1]?.properties;
 
                     opts.mapper({
                         id: argument.value,
@@ -50,7 +57,10 @@ export default function Gettextractor (opts: GettextractorOptions) {
                         file,
                         line: argument.loc.start.line,
                         column: argument.loc.start.column,
-                        comments
+                        comments,
+                        context: {
+                            plural: getContextValue(context, 'pluralForm')
+                        }
                     });
                 }
             }

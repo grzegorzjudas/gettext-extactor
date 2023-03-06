@@ -23,6 +23,21 @@ $ gettextractor --name __ --dir src --filter '.ts'
 ```
 This will print the .PO file contents to standard output. See `--out` flag usage for info on how to save it to a file.
 
+### Plural forms
+If necessary, you can also add plural form that will be added to `msgid_plural` in resulting .PO file using context object:
+
+```ts
+const text = __('Hello world', { pluralForm: 'Hello worlds' });
+```
+```
+#: src/HelloWorld.ts:1:13
+msgid "Hello world!"
+msgid_plural "Hello worlds!"
+msgstr[0] "Hello world!"
+```
+
+### CLI flags
+
 **--name**
 
 Provide the name of a function that will be looked for during extraction.

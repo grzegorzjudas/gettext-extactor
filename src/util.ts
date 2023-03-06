@@ -41,6 +41,7 @@ export function generateGettext (translations: Translation[], headers: Record<st
                 msgid: {
                     msgid: translation.id,
                     msgstr: [ translation.value ],
+                    msgid_plural: [ translation.context.plural ],
                     comments: {
                         reference: `${translation.file}:${translation.line}:${translation.column}`,
                         translator: translation.comments.join('; ')
